@@ -1,0 +1,6 @@
+/elpa/*
+/auto-save-list/*
+/ido.last
+/.emacs.desktop
+/.emacs.desktop.lock
+/projectile-bookmarks.eld
