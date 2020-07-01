@@ -46,7 +46,7 @@
    t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; (package-refresh-contents)
+;(package-refresh-contents)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; For working with 'workspaces'
@@ -56,8 +56,8 @@
   (package-install 'projectile))
 
 (defun lost-projectile-init ()
-	(projectile-mode +1)
-  (define-key projectile-mode-map (kbd "C-m") 'projectile-command-map)
+  (projectile-mode +1)
+  (define-key projectile-mode-map (kbd "C-,") 'projectile-command-map)
   (setq projectile-project-search-path '("~/.emacs.d/projects/" "~/.emacs.d/work/")))
 
 (lost-projectile-init)
