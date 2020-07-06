@@ -1,5 +1,5 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Common settings section
+;; Packages
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Added by Package.el.  This must come before configurations of
@@ -8,56 +8,37 @@
 ;; You may delete these explanatory comments.
 (package-initialize)
 
-(setq make-backup-files nil)
-
-; Use this because kill-emacs triggers creation of backupfiles i don't know why
- (setq backup-directory-alist '(("." . "d:/emacs-backups")))
-
-; Don't know what it is
-(toggle-frame-maximized)
-
-
-; Turning off that bell sound
-(setq ring-bell-function 'ignore)
-
-; Turning off the tool bar with icons
-(tool-bar-mode -1)
-
-; Hiding scrollbars
-(set-scroll-bar-mode nil)
-
-; Settings for pattern matching while enetering buffer name...
-; !!!Read about this more!
-(setq indo-enable-flex-matching t)
-(setq ido-everywhere t)
-(ido-mode 1)
-
-; Change emac's title
-(setq-default frame-title-format '("%f [%m]"))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Packages
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (require 'package
   (add-to-list
    'package-archives
    '("melpa" . "http://melpa.milkbox.net/packages/")
    t))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;(package-refresh-contents)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Helm
+;;
+
+(unless (package-installed-p 'helm)
+	(package-install 'helm))
+
+(unless (package-installed-p 'helm-projectile)
+	(package-install 'helm-projectile))
+
+(require 'helm-config)
+(helm-mode 1)
+
+;;
 ;; For working with 'workspaces'
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
 
 (unless (package-installed-p 'projectile)
   (package-install 'projectile))
 
 (defun lost-projectile-init ()
   (projectile-mode +1)
-  (define-key projectile-mode-map (kbd "C-,") 'projectile-command-map)
+  ;(define-key projectile-mode-map (kbd "C-,") 'projectile-command-map)
   (setq projectile-project-search-path '("~/.emacs.d/projects/" "~/.emacs.d/work/")))
 
 (lost-projectile-init)
@@ -67,7 +48,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (projectile))))
+ '(package-selected-packages (quote (helm-projectile helm bm projectile))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -75,6 +56,19 @@
  ;; If there is more than one, they won't work right.
  )
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Common settings section
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(setq make-backup-files nil)
+(setq auto-save-default nil)
+(setq ring-bell-function 'ignore)
+
+(toggle-frame-maximized)
+(tool-bar-mode -1)
+(set-scroll-bar-mode nil)
+
+(setq-default frame-title-format '("%f [%m]"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; New commands
@@ -127,6 +121,11 @@
 
 (global-set-key (kbd "C-x <escape>") 'kill-emacs)
 
+(global-set-key (kbd "C-, f") 'helm-projectile-find-file)
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "C-, p") 'helm-projectile-switch-project)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Color scheme section
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -155,8 +154,4 @@
 )
 
 (add-hook 'after-init-hook 'lost-init-hook)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Package section
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
