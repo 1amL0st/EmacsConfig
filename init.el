@@ -25,6 +25,7 @@
 
 (unless (package-installed-p 'helm-projectile)
 	(package-install 'helm-projectile))
+(require 'helm-projectile)
 
 (require 'helm-config)
 (helm-mode 1)
@@ -114,9 +115,6 @@
 ;; New keybings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;Replacing buffer with ibuffer
-(global-set-key (kbd "C-x C-b") 'ibuffer)
-
 (global-set-key (kbd "M-<f4>") 'quit-emacs)
 
 (global-set-key (kbd "C-x <escape>") 'kill-emacs)
@@ -125,6 +123,7 @@
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 (global-set-key (kbd "C-, p") 'helm-projectile-switch-project)
+(global-set-key (kbd "C-x C-b") 'helm-buffers-list)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Color scheme section
@@ -154,4 +153,3 @@
 )
 
 (add-hook 'after-init-hook 'lost-init-hook)
-
