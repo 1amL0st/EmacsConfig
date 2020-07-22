@@ -1,11 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Packages
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
 (package-initialize)
 
 (require 'package
@@ -16,25 +11,47 @@
 
 ;(package-refresh-contents)
 
+(defun lost-install-package (package-name)
+	"Install package if not installed"
+	(unless (package-installed-p package-name)
+		(package-install package-name)))
+
 ;;;;;;;;;;;;
 
-(unless (package-installed-p 'helm)
-	(package-install 'helm))
-
+(lost-install-package 'helm)
 (require 'helm-config)
 (helm-mode 1)
 
 ;;;;;;;;;;;;
 
-(unless (package-installed-p 'projectile)
-  (package-install 'projectile))
-
-(projectile-mode +1)
+(lost-install-package 'projectile)
+(projectile-global-mode)
 (setq projectile-project-search-path '("~/.emacs.d/projects/" "~/.emacs.d/work/"))
 
-(unless (package-installed-p 'helm-projectile)
-	(package-install 'helm-projectile))
+(lost-install-package 'helm-projectile)
 (require 'helm-projectile)
+
+;;;;;;;;;;;;
+; Don't user any of those for now
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; (lost-install-package 'irony)																	  ;;
+;; 																																  ;;
+;; (lost-install-package 'irony-eldoc)														  ;;
+;; 																																  ;;
+;; (lost-install-package 'flycheck-irony)													  ;;
+;; (add-hook 'after-init-hook #'global-flycheck-mode)							  ;;
+;; (global-flycheck-mode)																					  ;;
+;; 																																  ;;
+;; (lost-install-package 'company-irony)													  ;;
+;; (add-hook 'after-init-hook 'global-company-mode)								  ;;
+;; (global-set-key (kbd "M-/") 'company-complete-common-or-cycle)	  ;;
+;; (setq company-idle-delay 0)																		  ;;
+;; 																																  ;;
+;; (add-hook 'c++-mode-hook 'irony-mode)													  ;;
+;; (add-hook 'c-mode-hook 'irony-mode)														  ;;
+;; 																																  ;;
+;; (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options) ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Common settings section
@@ -83,24 +100,87 @@
   (delete-other-windows)
   (kill-emacs))
 
-(defun show-take-a-break-notification ()
-	  (x-popup-dialog t
-       '("Well it's seems you need to take a break for a while"
-				("Take a break" . "This"))
-			  nil)
-	)
+(defun kill-all-buffers ()
+	"Closes all opened buffers"
+	(interactive)
+	(mapc 'kill-buffer (buffer-list)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Bookmarks extension
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defvar lost-last-bookmark nil
+	"Last bookmark")
+
+(defun lost-update-last-bookmark (r)
+	"Update last bookmark index"
+	(if (eq bookmark-alist nil)
+			(setq lost-last-bookmark nil)
+		(if (eq lost-last-bookmark nil)
+				(setq lost-last-bookmark 0)
+			(let ((count (length bookmark-alist)))
+			(setq lost-last-bookmark (+ lost-last-bookmark r))
+			(if (>= lost-last-bookmark count)
+					(setq lost-last-bookmark 0))
+			(if (< lost-last-bookmark 0)
+					(setq lost-last-bookmark (- count 1))))
+		)))
+
+(defun lost-go-to-last-bookmark ()
+	"Go to last bookmark selected"
+	(interactive)
+	(message "Go to bookmark index = %d" lost-last-bookmark)
+	(bookmark-jump (nth lost-last-bookmark bookmark-alist)))
+
+(defun lost-set-bookmark ()
+	"Sets bookmark at cursor position"
+	(interactive)
+	(message "Isn't implemented yet!"))
+
+(defun lost-jump-next-bookmark ()
+	"Jumps to next bookmark"
+	(interactive)
+	(lost-update-last-bookmark 1)		
+	(lost-go-to-last-bookmark))
+
+(defun lost-jump-prev-bookmark ()
+	"Jumps to prev bookmark"
+	(interactive)
+	(lost-update-last-bookmark -1)
+	(lost-go-to-last-bookmark))
+
+(defun lost-kill-all-bookmarks ()
+	"Kill all bookmars"
+	(interactive)	
+	(setq bookmark-alist nil))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; New keybings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(global-set-key (kbd "C-t") nil)
+(global-set-key (kbd "C-t s") 'bookmark-set)
+(global-set-key (kbd "C-t j") 'bookmark-jump)
+(global-set-key (kbd "C-t l") 'bookmark-bmenu-list)
+
+(global-set-key (kbd "C-t n") 'lost-jump-next-bookmark)
+(global-set-key (kbd "C-t p") 'lost-jump-prev-bookmark)
+
+(global-set-key (kbd "M-m") nil)
+(global-set-key (kbd "C-a") 'back-to-indentation)
+
+(global-set-key (kbd "C-r") nil)
+(global-set-key (kbd "C-r r") 'replace-rectangle)
+(global-set-key (kbd "C-r k") 'kill-rectangle)
 
 (global-set-key (kbd "M-<f4>") 'quit-emacs)
 
 (global-set-key (kbd "C-x <escape>") 'kill-emacs)
 
 (global-set-key (kbd "C-, f") 'helm-projectile-find-file)
-(global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
+
+(global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-, p") 'helm-projectile-switch-project)
 (global-set-key (kbd "C-x C-b") 'helm-buffers-list)
 
@@ -121,7 +201,8 @@
 ;Initialize text color settings
 (defun init-text-color-settings()
   "Sets my appearence for the text"
-  (setq-default tab-width 2))
+  (setq-default tab-width 2)
+	(set-cursor-color "#00FF00"))
 
 (unless (package-installed-p 'gruvbox-theme)
 	(package-install 'gruvbox-theme))
@@ -140,4 +221,17 @@
 
 (add-hook 'after-init-hook 'lost-init-hook)
 
-(custom-set-variables)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+	 (quote
+		(irony-eldoc helm-projectile gruvbox-theme doom-themes))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((((class color) (min-colors 16777215)) (:background "#282828" :foreground "#fdf4c1")) (((class color) (min-colors 255)) (:background "#262626" :foreground "#ffffaf")))))
