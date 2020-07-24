@@ -1,4 +1,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 1. Build - DONE
+;; 2. TODO highlight - DONE
+;; 3. Move back - forward
+;; 4. Replace in region - DONE
+;; 5. Select function's body for C++ code only
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Packages
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (package-initialize)
@@ -9,7 +17,7 @@
    '("melpa" . "http://melpa.milkbox.net/packages/")
    t))
 
-;(package-refresh-contents)
+; (package-refresh-contents)
 
 (defun lost-install-package (package-name)
 	"Install package if not installed"
@@ -152,19 +160,78 @@
 (defun lost-kill-all-bookmarks ()
 	"Kill all bookmars"
 	(interactive)	
-	(setq bookmark-alist nil))
+	(setq bookmark-alist nil)
+	(delete-file "~/.emacs.d/bookmarks"))
+
+(defun lost-jump-to-current-bookmark()
+	"Jump to last selected bookmark"
+	(interactive)
+	(lost-update-last-bookmark 0)
+	(lost-go-to-last-bookmark))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Text replacement
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun lost-replace-in-region ()
+	"Replace string in selected region"
+	(interactive)
+	(let ((beg (mark))
+				(end (point))
+				(string-to-replace (read-from-minibuffer "String to replace: "))
+				(new-string (read-from-minibuffer "New string: ")))
+		(replace-string string-to-replace new-string 1 beg end nil)
+	))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Custom text highlight
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(setq fixme-modes '(c++-mode c-mode emacs-lisp-mode))
+(make-face 'font-lock-fixme-face)
+(make-face 'font-lock-note-face)
+(mapc (lambda (mode)
+	(font-lock-add-keywords
+	 mode
+	 '(("\\<\\(TODO\\)" 1 'font-lock-fixme-face t)
+           ("\\<\\(NOTE\\)" 1 'font-lock-note-face t))))
+			fixme-modes)
+(modify-face 'font-lock-fixme-face "Red" nil nil t nil t nil nil)
+(modify-face 'font-lock-note-face "Dark Green" nil nil t nil t nil nil)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; NOTE: Misc
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun lost-call-cmake ()
+	"Tries to call cmake build script"
+	(interactive)
+	(let (
+				(root (projectile-project-root))
+				(command nil)
+				)
+		(setq command (format "cd %s && make" root))
+		(shell-command command)
+		))
+
+(global-set-key (kbd "M-m") 'lost-call-cmake)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; New keybings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(global-set-key (kbd "C-c C-u") nil)
+(global-set-key (kbd "C-c u") 'uncomment-region)
+
 (global-set-key (kbd "C-t") nil)
 (global-set-key (kbd "C-t s") 'bookmark-set)
 (global-set-key (kbd "C-t j") 'bookmark-jump)
-(global-set-key (kbd "C-t l") 'bookmark-bmenu-list)
+(global-set-key (kbd "C-t l") 'helm-bookmarks)
+(global-set-key (kbd "C-t d") 'bookmark-delete)
 
 (global-set-key (kbd "C-t n") 'lost-jump-next-bookmark)
 (global-set-key (kbd "C-t p") 'lost-jump-prev-bookmark)
+(global-set-key (kbd "C-t c") 'lost-jump-to-current-bookmark)
 
 (global-set-key (kbd "M-m") nil)
 (global-set-key (kbd "C-a") 'back-to-indentation)
@@ -173,9 +240,12 @@
 (global-set-key (kbd "C-r r") 'replace-rectangle)
 (global-set-key (kbd "C-r k") 'kill-rectangle)
 
+; This keybinding isn't good
+(global-set-key (kbd "C-r e") 'lost-replace-in-region)
+
 (global-set-key (kbd "M-<f4>") 'quit-emacs)
 
-(global-set-key (kbd "C-x <escape>") 'kill-emacs)
+; (global-set-key (kbd "C-x <escape>") 'kill-emacs)
 
 (global-set-key (kbd "C-, f") 'helm-projectile-find-file)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
