@@ -1,8 +1,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 1. Build - DONE
-;; 2. TODO highlight - DONE
-;; 3. Move back - forward
-;; 4. Replace in region - DONE
+;; 4. Replace in region - DONE NOTE: Doesn't work well, because of replacing every match
+;; NOTE undone
+;; 2. Run - DONE
+;; 3. Move back - forward 
 ;; 5. Select function's body for C++ code only
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -201,24 +201,50 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; NOTE: Misc
+;; NOTE: All code below is specific for my system/my project configuration
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun lost-call-cmake ()
+(defun lost-call-make ()
 	"Tries to call cmake build script"
 	(interactive)
 	(let (
 				(root (projectile-project-root))
 				(command nil)
 				)
-		(setq command (format "cd %s && make" root))
+		(setq command (format "cd %s && make &" root))
 		(shell-command command)
-		))
+	)
+)
 
-(global-set-key (kbd "M-m") 'lost-call-cmake)
+(defun lost-run-release-program ()
+	"Tries to run release verions of program"
+	(interactive)
+	(let (
+				(project-name (projectile-project-name))
+				(root (projectile-project-root))
+				)
+		(shell-command (format "cd %s && konsole -e %sbin/Debug/%s" root root project-name)))
+ )
+
+(defun lost-run-debug-program ()
+	"Tries run to debug version of program"
+	(interactive)
+	(let (
+				(project-name (projectile-project-name))
+				(root (projectile-project-root))
+				)
+		(shell-command (format "cd %s && konsole -e %sbin/Debug/%s" root root project-name))
+	))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; New keybings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(global-set-key (kbd "M-n") 'lost-run-debug-program)
+(global-set-key (kbd "M-r") 'lost-run-release-program)
+
+(global-set-key (kbd "M-m") nil)
+(global-set-key (kbd "M-m") 'lost-call-make)
 
 (global-set-key (kbd "C-c C-u") nil)
 (global-set-key (kbd "C-c u") 'uncomment-region)
@@ -233,7 +259,6 @@
 (global-set-key (kbd "C-t p") 'lost-jump-prev-bookmark)
 (global-set-key (kbd "C-t c") 'lost-jump-to-current-bookmark)
 
-(global-set-key (kbd "M-m") nil)
 (global-set-key (kbd "C-a") 'back-to-indentation)
 
 (global-set-key (kbd "C-r") nil)
