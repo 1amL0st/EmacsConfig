@@ -69,6 +69,11 @@
 (setq auto-save-default nil)
 (setq ring-bell-function 'ignore)
 
+; (electric-indent-mode nil)
+; (setq electric-indent-mode nil)
+
+; (electric-mode nil)
+
 (toggle-frame-maximized)
 (tool-bar-mode -1)
 (set-scroll-bar-mode nil)
@@ -236,9 +241,22 @@
 		(shell-command (format "cd %s && konsole -e %sbin/Debug/%s" root root project-name))
 	))
 
+(defun lost-selected-region-length ()
+	"Returns length of selected region in characters"
+	(interactive)
+	(let (
+				(beg (mark))
+				(end (point))
+			 )
+		(message "Legnth = %d" (- end beg))
+	)
+)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; New keybings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(global-set-key (kbd "C-x q") 'quick-calc)
 
 (global-set-key (kbd "M-n") 'lost-run-debug-program)
 (global-set-key (kbd "M-r") 'lost-run-release-program)
