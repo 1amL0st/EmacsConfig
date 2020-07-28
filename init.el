@@ -46,26 +46,8 @@
 (require 'helm-projectile)
 
 ;;;;;;;;;;;;
-; Don't user any of those for now
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; (lost-install-package 'irony)																	  ;;
-;; 																																  ;;
-;; (lost-install-package 'irony-eldoc)														  ;;
-;; 																																  ;;
-;; (lost-install-package 'flycheck-irony)													  ;;
-;; (add-hook 'after-init-hook #'global-flycheck-mode)							  ;;
-;; (global-flycheck-mode)																					  ;;
-;; 																																  ;;
-;; (lost-install-package 'company-irony)													  ;;
-;; (add-hook 'after-init-hook 'global-company-mode)								  ;;
-;; (global-set-key (kbd "M-/") 'company-complete-common-or-cycle)	  ;;
-;; (setq company-idle-delay 0)																		  ;;
-;; 																																  ;;
-;; (add-hook 'c++-mode-hook 'irony-mode)													  ;;
-;; (add-hook 'c-mode-hook 'irony-mode)														  ;;
-;; 																																  ;;
-;; (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options) ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;TODO: Maybe use irony....
+;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Common settings section
@@ -74,11 +56,6 @@
 (setq make-backup-files nil)
 (setq auto-save-default nil)
 (setq ring-bell-function 'ignore)
-
-; (electric-indent-mode nil)
-; (setq electric-indent-mode nil)
-
-; (electric-mode nil)
 
 (toggle-frame-maximized)
 (tool-bar-mode -1)
@@ -276,7 +253,7 @@
 (global-set-key (kbd "C-c C-u") nil)
 (global-set-key (kbd "C-c u") 'uncomment-region)
 
-(global-set-key (kbd "C-c C-c") 'comment-region)
+(global-set-key (kbd "C-c c") 'comment-region)
 
 (global-set-key (kbd "C-t") nil)
 (global-set-key (kbd "C-t s") 'bookmark-set)
@@ -311,18 +288,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Colors, visual appearence
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;Leave all of them for now, maybe i'll use them ()_ but i am not sure.
-;(defvar user-theme-name "lost-ray-theme"
-;  "Path to user's color theme")
 
-;(add-to-list 'load-path "~/.emacs.d/themes")
-
-;(unless (package-installed-p 'doom-themes)
-;	(package-install 'doom-themes))
-
-;(require 'doom-themes)
-
-;Initialize text color settings
 (defun init-text-color-settings()
   "Sets my appearence for the text"
   (setq-default tab-width 2)
@@ -346,16 +312,8 @@
 (add-hook 'after-init-hook 'lost-init-hook)
 
 (custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
  '(package-selected-packages
 	 (quote
 		(irony-eldoc helm-projectile gruvbox-theme doom-themes))))
 (custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
  '(default ((((class color) (min-colors 16777215)) (:background "#282828" :foreground "#fdf4c1")) (((class color) (min-colors 255)) (:background "#262626" :foreground "#ffffaf")))))
