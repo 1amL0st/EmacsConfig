@@ -11,13 +11,19 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (package-initialize)
 
+(add-to-list 'package-archives
+             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+
+(add-to-list 'package-archives
+             '("gnu" . "http://elpa.gnu.org/packages") t)
+
 (require 'package
   (add-to-list
    'package-archives
    '("melpa" . "http://melpa.milkbox.net/packages/")
    t))
 
-; (package-refresh-contents)
+;(package-refresh-contents)
 
 (defun lost-install-package (package-name)
 	"Install package if not installed"
@@ -256,6 +262,9 @@
 ;; New keybings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(global-set-key (kbd "C-l") nil)
+(global-set-key (kbd "C-l") 'kill-whole-line)
+
 (global-set-key (kbd "C-x q") 'quick-calc)
 
 (global-set-key (kbd "M-n") 'lost-run-debug-program)
@@ -266,6 +275,8 @@
 
 (global-set-key (kbd "C-c C-u") nil)
 (global-set-key (kbd "C-c u") 'uncomment-region)
+
+(global-set-key (kbd "C-c C-c") 'comment-region)
 
 (global-set-key (kbd "C-t") nil)
 (global-set-key (kbd "C-t s") 'bookmark-set)
@@ -326,7 +337,7 @@
 	(if (string= system-type "gnu/linux")
 			(set-default-font "Source Code Pro 11" nil t))
 	(if (string= system-type "windows-nt")
-		  (set-default-font "Lucida Console 13" nil t)))
+		  (set-default-font "Consolas 13" nil t)))
 
 (defun lost-init-hook ()
   (init-text-color-settings)
