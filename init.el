@@ -203,14 +203,49 @@
 ;; NOTE: All code below is specific for my system/my project configuration
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun lost-change-path (str)
+	"Replace all symbols in string"
+	(let ((len (length str))
+			  (new_string "")
+				(i 0)
+				(symbol nil)
+				)
+		(while (< i len)
+			(setq symbol (substring str i (+ i 1)))
+			(if (equal symbol " ")
+					(setq symbol (concat (make-string 1 ?\) " ")))
+			(message "symbol = '%s'" symbol)
+			(setq new_string (concat new_string symbol))			
+			(setq i (+ i 1))
+			)
+		new_string
+		)
+)
+
+(lost-change-path "/run/media/lost/New Volume/cpp_projects/RayTracer//build/")
+
+(message "New string %s" (replace-all-symbols "My interesting string with spaces" " " "t"))
+
+(defun lost-call-cmake-generate ()
+	"Tries to call cmake build script (generate build files)"
+	(interactive)
+	(let (
+				(root (lost-change-path (projectile-project-root)))
+				(command nil)
+				)
+		(setq command (format "cd %s/build/ && cmake .. &" root))
+		(shell-command command)
+	)
+)
+
 (defun lost-call-cmake-build ()
 	"Tries to call cmake build script"
 	(interactive)
 	(let (
-				(root (projectile-project-root))
+				(root (lost-change-path (projectile-project-root)))
 				(command nil)
 				)
-		(setq command (format "cd %s/build/ && cmake --build &" root))
+		(setq command (format "cd %s/build/ && cmake --build . &" root))
 		(shell-command command)
 	)
 )
@@ -220,7 +255,7 @@
 	(interactive)
 	(let (
 				(project-name (projectile-project-name))
-				(root (projectile-project-root))
+				(root (lost-change-path (projectile-project-root)))
 				(command nil)
 				)
 		(if (eq system-type 'gnu/linux)
@@ -235,7 +270,7 @@
 	(interactive)
 	(let (
 				(project-name (projectile-project-name))
-				(root (projectile-project-root))
+			  (root (lost-change-path (projectile-project-root)))
 				(command nil)
 				)
 		(if (eq system-type 'gnu/linux)
@@ -272,6 +307,7 @@
 
 (global-set-key (kbd "M-m") nil)
 (global-set-key (kbd "M-m") 'lost-call-cmake-build)
+(global-set-key (kbd "M-p") 'lost-call-cmake-generate)
 
 (global-set-key (kbd "C-c C-u") nil)
 (global-set-key (kbd "C-c u") 'uncomment-region)
