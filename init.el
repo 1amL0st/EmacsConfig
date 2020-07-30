@@ -2,8 +2,9 @@
 ;; 4. Replace in region - DONE NOTE: Doesn't work well, because of replacing every match
 ;; NOTE undone
 ;; 2. Run - DONE
-;; 3. Move back - forward 
+;; 3. Move back - forward
 ;; 5. Select function's body for C++ code only
+;; 6. Insert and remove tabs from code like in vs-code ctrl+[/] NOTE: maybe this is useles beacause of emacs has interactive block-replace
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -157,8 +158,18 @@
 	(lost-update-last-bookmark 0)
 	(lost-go-to-last-bookmark))
 
+(global-set-key (kbd "C-t") nil)
+(global-set-key (kbd "C-t s") 'bookmark-set)
+(global-set-key (kbd "C-t j") 'bookmark-jump)
+(global-set-key (kbd "C-t l") 'helm-bookmarks)
+(global-set-key (kbd "C-t d") 'bookmark-delete)
+
+(global-set-key (kbd "C-t n") 'lost-jump-next-bookmark)
+(global-set-key (kbd "C-t p") 'lost-jump-prev-bookmark)
+(global-set-key (kbd "C-t c") 'lost-jump-to-current-bookmark)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Text replacement
+;; Text editing
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun lost-replace-in-region ()
@@ -192,14 +203,14 @@
 ;; NOTE: All code below is specific for my system/my project configuration
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun lost-call-make ()
+(defun lost-call-cmake-build ()
 	"Tries to call cmake build script"
 	(interactive)
 	(let (
 				(root (projectile-project-root))
 				(command nil)
 				)
-		(setq command (format "cd %s && make &" root))
+		(setq command (format "cd %s/build/ && cmake --build &" root))
 		(shell-command command)
 	)
 )
@@ -210,8 +221,13 @@
 	(let (
 				(project-name (projectile-project-name))
 				(root (projectile-project-root))
+				(command nil)
 				)
-		(shell-command (format "cd %s && konsole -e %sbin/Debug/%s" root root project-name)))
+		(if (eq system-type 'gnu/linux)
+				(setq command (format "cd %s && konsole -e %sbin/Release/%s" root root project-name))
+			(message "Not implemented yet!")
+		(shell-command command)
+		)
  )
 
 (defun lost-run-debug-program ()
@@ -220,9 +236,14 @@
 	(let (
 				(project-name (projectile-project-name))
 				(root (projectile-project-root))
+				(command nil)
 				)
-		(shell-command (format "cd %s && konsole -e %sbin/Debug/%s" root root project-name))
-	))
+		(if (eq system-type 'gnu/linux)
+				(setq command (format "cd %s && konsole -e %sbin/Release/%s" root root project-name))
+			(message "Not implemented yet!")
+		(shell-command command)
+		)
+)
 
 (defun lost-selected-region-length ()
 	"Returns length of selected region in characters"
@@ -239,6 +260,8 @@
 ;; New keybings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(global-set-key (kbd "C-c c") 'comment-region)
+
 (global-set-key (kbd "C-l") nil)
 (global-set-key (kbd "C-l") 'kill-whole-line)
 
@@ -248,22 +271,12 @@
 (global-set-key (kbd "M-r") 'lost-run-release-program)
 
 (global-set-key (kbd "M-m") nil)
-(global-set-key (kbd "M-m") 'lost-call-make)
+(global-set-key (kbd "M-m") 'lost-call-cmake-build)
 
 (global-set-key (kbd "C-c C-u") nil)
 (global-set-key (kbd "C-c u") 'uncomment-region)
 
 (global-set-key (kbd "C-c c") 'comment-region)
-
-(global-set-key (kbd "C-t") nil)
-(global-set-key (kbd "C-t s") 'bookmark-set)
-(global-set-key (kbd "C-t j") 'bookmark-jump)
-(global-set-key (kbd "C-t l") 'helm-bookmarks)
-(global-set-key (kbd "C-t d") 'bookmark-delete)
-
-(global-set-key (kbd "C-t n") 'lost-jump-next-bookmark)
-(global-set-key (kbd "C-t p") 'lost-jump-prev-bookmark)
-(global-set-key (kbd "C-t c") 'lost-jump-to-current-bookmark)
 
 (global-set-key (kbd "C-a") 'back-to-indentation)
 
@@ -275,7 +288,7 @@
 (global-set-key (kbd "C-r e") 'lost-replace-in-region)
 
 (global-set-key (kbd "M-<f4>") 'quit-emacs)
-
+;NOTE: DANGEROUS! Might kill you!
 ; (global-set-key (kbd "C-x <escape>") 'kill-emacs)
 
 (global-set-key (kbd "C-, f") 'helm-projectile-find-file)
