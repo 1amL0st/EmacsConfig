@@ -207,24 +207,19 @@
 	"Replace all symbols in string"
 	(let ((len (length str))
 			  (new_string "")
-				(i 0)
-				(symbol nil)
-				)
+			  (i 0)
+			  (symbol nil)
+			  )
 		(while (< i len)
 			(setq symbol (substring str i (+ i 1)))
 			(if (equal symbol " ")
-					(setq symbol (concat (make-string 1 ?\) " ")))
-			(message "symbol = '%s'" symbol)
-			(setq new_string (concat new_string symbol))			
+					(setq symbol (concat (make-string 1 ?\) " "))))
+			(setq new_string (concat new_string symbol))
 			(setq i (+ i 1))
 			)
 		new_string
 		)
 )
-
-(lost-change-path "/run/media/lost/New Volume/cpp_projects/RayTracer//build/")
-
-(message "New string %s" (replace-all-symbols "My interesting string with spaces" " " "t"))
 
 (defun lost-call-cmake-generate ()
 	"Tries to call cmake build script (generate build files)"
