@@ -225,10 +225,10 @@
 				)
 		(if (eq system-type 'gnu/linux)
 				(setq command (format "cd %s && konsole -e %sbin/Release/%s" root root project-name))
-			(message "Not implemented yet!")
+			(message "Not implemented yet!"))
 		(shell-command command)
 		)
- )
+)
 
 (defun lost-run-debug-program ()
 	"Tries run to debug version of program"
@@ -239,8 +239,8 @@
 				(command nil)
 				)
 		(if (eq system-type 'gnu/linux)
-				(setq command (format "cd %s && konsole -e %sbin/Release/%s" root root project-name))
-			(message "Not implemented yet!")
+				(setq command (format "cd %s && konsole -e %sbin/Debug/%s" root root project-name))
+			(message "Not implemented yet!"))
 		(shell-command command)
 		)
 )
