@@ -290,6 +290,12 @@
 ;; New keybings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(global-set-key (kbd "C-x [") nil)
+(global-set-key (kbd "C-x ]") nil)
+
+(global-set-key (kbd "C-x [") 'previous-buffer)
+(global-set-key (kbd "C-x ]") 'next-buffer)
+
 (global-set-key (kbd "C-c c") 'comment-region)
 
 (global-set-key (kbd "C-l") nil)
