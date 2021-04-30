@@ -350,10 +350,12 @@
 (require 'gruvbox-theme)
 
 (defun init-select-font ()
-	(if (string= system-type "gnu/linux")
-			(set-default-font "Source Code Pro 11" nil t))
-	(if (string= system-type "windows-nt")
-		  (set-default-font "Consolas 13" nil t)))
+	(set-frame-font "Comic Mono 11" nil t)
+	;; (if (string= system-type "gnu/linux")
+	;; 		(set-default-font "Source Code Pro 11" nil t))
+	;; (if (string= system-type "windows-nt")
+	;; 	  (set-default-font "Consolas 13" nil t))
+)
 
 (defun lost-init-hook ()
   (init-text-color-settings)
