@@ -24,7 +24,14 @@
    '("melpa" . "http://melpa.milkbox.net/packages/")
    t))
 
-;(package-refresh-contents)
+(if (not (require 'some-library nil 'noerror))
+		message "Helm isn't installed!"
+)
+
+(if (require 'helm 'noerror)
+		(message "Helm is installed!")
+	(package-refresh-contents)
+)
 
 (defun lost-install-package (package-name)
 	"Install package if not installed"
@@ -45,10 +52,6 @@
 
 (lost-install-package 'helm-projectile)
 (require 'helm-projectile)
-
-;;;;;;;;;;;;
-;TODO: Maybe use irony....
-;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Common settings section
@@ -351,10 +354,6 @@
 
 (defun init-select-font ()
 	(set-frame-font "Comic Mono 11" nil t)
-	;; (if (string= system-type "gnu/linux")
-	;; 		(set-default-font "Source Code Pro 11" nil t))
-	;; (if (string= system-type "windows-nt")
-	;; 	  (set-default-font "Consolas 13" nil t))
 )
 
 (defun lost-init-hook ()
