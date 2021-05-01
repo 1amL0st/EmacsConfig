@@ -566,6 +566,9 @@ See the header of this file for more information."
 
   (global-set-key (kbd "C-c c") 'comment-region)
   (global-set-key (kbd "C-c u") 'uncomment-region)
+
+  (global-set-key (kbd "C-x .") 'next-buffer)
+  (global-set-key (kbd "C-x ,") 'previous-buffer)
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
