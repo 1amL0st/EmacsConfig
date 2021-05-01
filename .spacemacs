@@ -551,6 +551,13 @@ See the header of this file for more information."
 ;; 1amL0st keybindings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(add-hook 'rust-mode-hook
+          (lambda ()
+            (local-set-key (kbd "<f5>") 'cargo-process-run)
+            (local-set-key (kbd "<f6>") 'cargo-process-check)
+           )
+)
+
 (defun delete-line-no-kill ()
   (interactive)
   (delete-region
@@ -572,7 +579,6 @@ See the header of this file for more information."
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 
 (defun dotspacemacs/user-init ()
   "Initialization for user code:
