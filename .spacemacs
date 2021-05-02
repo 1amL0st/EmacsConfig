@@ -551,6 +551,26 @@ See the header of this file for more information."
 ;; 1amL0st keybindings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+; TODO: Change TODO|NOTE|FIXME keywords color and maybe add highlight for text
+; TODO: Add this functionality later...
+(defun i-am-lost-cmake-build-and-run ()
+  (interactive)
+  (with-current-buffer "*eshell*"
+    (eshell-kill-input)
+    (end-of-buffer)
+    (insert "cmake --build")
+    (eshell-send-input)
+    (end-of-buffer)
+    (yank)
+  )
+)
+
+(add-hook 'c-mode-hook
+          (lambda ()
+            (local-set-key (kbd "<f5>") 'i-am-lost-cmake-build-and-run)
+          )
+)
+
 (add-hook 'rust-mode-hook
           (lambda ()
             (local-set-key (kbd "<f5>") 'cargo-process-run)
@@ -576,6 +596,7 @@ See the header of this file for more information."
 
   (global-set-key (kbd "C-x .") 'next-buffer)
   (global-set-key (kbd "C-x ,") 'previous-buffer)
+  (global-set-key (kbd "C-x C-b") 'buffer-menu)
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
